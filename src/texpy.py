@@ -47,7 +47,7 @@ def makeTabular(tableData, rowNames=[], colNames=[],
         if withRowNames:
             out.write(amp)
         out.write(amp.join(colNames))
-        out.write(amp * (cols - len(colNames)))
+        out.write(amp * (cols - len(colNames) - 1))
         out.write(nl)
         out.write(hline)
     if withRowNames:
@@ -56,7 +56,7 @@ def makeTabular(tableData, rowNames=[], colNames=[],
         if withRowNames:
             out.write(rowNames[row] + amp)
         out.write(amp.join(item for item in tableData[row]))
-        out.write(amp * (cols - len(tableData[row])))
+        out.write(amp * (cols - len(tableData[row]) - 1))
         out.write(nl)
     if withRowNames:
         out.write(nl.join(rowNames[emptyRow] + amp
