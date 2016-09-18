@@ -24,42 +24,49 @@
 import sys
 
 
-def makeTabular(tableData, out=sys.stdout, rowNames=[], colNames=[],
+def makeTabular(tableData, rowNames=[], colNames=[],
                 colFormat='c', colSep='|',
-                leftSep='|', rightSep='|'):
+                leftSep='|', rightSep='|',
+                rowNameColFormat='l',
+                out=sys.stdout, nlAlways=False):
     cols = max(len(colNames), max(len(row) for row in tableData))
     rows = max(len(rowNames), len(tableData))
     withRowNames = len(rowNames) > 0
+    amp = '\n&\n' if nlAlways else ' & '
+    nl = '\n\\\\\n' if nlAlways else ' \\\\\n'
+    hline = '\\hline\n'
+    rowNameFormat = rowNameColFormat + colSep
 
     tabularFormatString = (leftSep
-                           + ('l|' if withRowNames else '')
+                           + (rowNameFormat if withRowNames else '')
                            + colSep.join(colFormat for _ in range(0, cols))
                            + rightSep)
     out.write('\\begin{tabular}{%s}\n' % tabularFormatString)
     if len(colNames) > 0:
-        out.write('\\hline\n')
+        out.write(hline)
         if withRowNames:
-            out.write(' & ')
-        out.write(' & '.join(colNames))
-        out.write(' & ' * (cols - len(colNames)))
-        out.write('\\\\\n')
-        out.write('\\hline\n')
+            out.write(amp)
+        out.write(amp.join(colNames))
+        out.write(amp * (cols - len(colNames)))
+        out.write(nl)
+        out.write(hline)
     if withRowNames:
         rowNames.extend((rows - len(rowNames)) * ' ')
     for row in range(0, len(tableData)):
         if withRowNames:
-            out.write(rowNames[row] + ' & ')
-        out.write(' & '.join(item for item in tableData[row]))
-        out.write(' & ' * (cols - len(tableData[row])))
-        out.write(' \\\\\n')
+            out.write(rowNames[row] + amp)
+        out.write(amp.join(item for item in tableData[row]))
+        out.write(amp * (cols - len(tableData[row])))
+        out.write(nl)
     if withRowNames:
-        out.write('\\\\\n'.join(rowNames[emptyRow] + ' & '
-                                + (' & ' * (cols - 1)) for emptyRow in
-                                range(len(tableData), rows)))
+        out.write(nl.join(rowNames[emptyRow] + amp
+                          + (amp * (cols - 1)) for emptyRow in
+                          range(len(tableData), rows)))
     else:
-        out.write('\\\\\n'.join(' & ' * (cols - 1) for _ in
-                                range(len(tableData), rows)))
+        out.write(nl.join(amp * (cols - 1) for _ in
+                          range(len(tableData), rows)))
     if rows > len(tableData):
-        out.write('\\\\\n')
-    out.write('\hline\n\\end{tabular}\n')
+        out.write(nl)
+    out.write(hline)
+    out.write('\\end{tabular}\n')
     out.flush()
