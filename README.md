@@ -2,6 +2,7 @@
 Write LaTeX code with Python.
 
 ## How to use
+### Create a LaTeX table
 ```
 $ python3
 >>> import texpy
@@ -10,7 +11,9 @@ $ python3
 >>> texpy.makeTabular(doc, [['1','2','3'], ['4','5','6']])
 >>> doc.writeDocument()
 >>> quit()
-
+```
+... which creates the LaTeX document:
+```
 $ cat mytable.tex
 \documentclass[]{article}
 \usepackage[active,tightpage]{preview}
@@ -24,8 +27,11 @@ $ cat mytable.tex
 \end{preview}
 \end{document}
 ```
+... which compiles to:
+
 ![The produced PDF.](/doc/mytable.png)
 
+### Create a LaTeX plot with TikZ
 ```
 $ python3
 >>> import texpy
@@ -34,7 +40,9 @@ $ python3
 >>> texpy.tikzPlot(doc, [[(1, 1), (2, 4), (3, 0), (4.5, 6.1), (5.5, 1)], [(0, 5), (2, -1), (4, 3), (5, 2)]], datasetStyles=['red', 'blue'], datasetLabels=['nonsense data', 'random data'], visualizeAs=['smooth line', 'line'], nlAlways=True)
 >>> doc.writeDocument()
 >>> quit()
-
+```
+... which creates the LaTeX document:
+```
 $ cat myplot.tex
 \documentclass[]{article}
 \usepackage[active,tightpage]{preview}
@@ -79,4 +87,6 @@ x y
 \end{preview}
 \end{document}
 ```
+... which compiles to:
+
 ![The produced PDF.](/doc/myplot.png)
