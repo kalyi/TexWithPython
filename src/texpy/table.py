@@ -21,14 +21,12 @@
 
 '''Create a LaTeX table in Python'''
 
-import sys
 
-
-def makeTabular(tableData, rowNames=[], colNames=[],
+def makeTabular(doc, tableData, rowNames=[], colNames=[],
                 colFormat='c', colSep='|',
                 leftSep='|', rightSep='|',
                 rowNameColFormat='l',
-                out=sys.stdout, nlAlways=False):
+                nlAlways=False):
     cols = max(len(colNames), max(len(row) for row in tableData))
     rows = max(len(rowNames), len(tableData))
     withRowNames = len(rowNames) > 0
@@ -41,32 +39,31 @@ def makeTabular(tableData, rowNames=[], colNames=[],
                            + (rowNameFormat if withRowNames else '')
                            + colSep.join(colFormat for _ in range(0, cols))
                            + rightSep)
-    out.write('\\begin{tabular}{%s}\n' % tabularFormatString)
+    doc.beginTabular(tabularFormatString)
     if len(colNames) > 0:
-        out.write(hline)
+        doc.addContent(hline)
         if withRowNames:
-            out.write(amp)
-        out.write(amp.join(colNames))
-        out.write(amp * (cols - len(colNames) - 1))
-        out.write(nl)
-        out.write(hline)
+            doc.addContent(amp)
+        doc.addContent(amp.join(colNames))
+        doc.addContent(amp * (cols - len(colNames) - 1))
+        doc.addContent(nl)
+        doc.addContent(hline)
     if withRowNames:
         rowNames.extend((rows - len(rowNames)) * ' ')
     for row in range(0, len(tableData)):
         if withRowNames:
-            out.write(rowNames[row] + amp)
-        out.write(amp.join(item for item in tableData[row]))
-        out.write(amp * (cols - len(tableData[row]) - 1))
-        out.write(nl)
+            doc.addContent(rowNames[row] + amp)
+        doc.addContent(amp.join(item for item in tableData[row]))
+        doc.addContent(amp * (cols - len(tableData[row]) - 1))
+        doc.addContent(nl)
     if withRowNames:
-        out.write(nl.join(rowNames[emptyRow] + amp
+        doc.addContent(nl.join(rowNames[emptyRow] + amp
                           + (amp * (cols - 1)) for emptyRow in
                           range(len(tableData), rows)))
     else:
-        out.write(nl.join(amp * (cols - 1) for _ in
+        doc.addContent(nl.join(amp * (cols - 1) for _ in
                           range(len(tableData), rows)))
     if rows > len(tableData):
-        out.write(nl)
-    out.write(hline)
-    out.write('\\end{tabular}\n')
-    out.flush()
+        doc.addContent(nl)
+    doc.addContent(hline)
+    doc.endTabular()

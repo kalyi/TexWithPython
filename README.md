@@ -7,7 +7,7 @@ $ python3
 >>> import texpy
 >>> doc = texpy.LatexDocument('mydocument.tex')
 >>> doc.enablePreview()
->>> texpy.makeTabular([['1','2','3'], ['4','5','6']], out=doc)
+>>> texpy.makeTabular(doc, [['1','2','3'], ['4','5','6']])
 >>> doc.writeDocument()
 >>> quit()
 

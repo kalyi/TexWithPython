@@ -63,6 +63,12 @@ class LatexDocument:
     def flush(self):
         pass
 
+    def beginTabular(self, formatString):
+        self.addContent('\\begin{tabular}{%s}\n' % formatString)
+
+    def endTabular(self):
+        self.addContent('\\end{tabular}\n')
+
     def writeDocument(self):
         with open(self.__filename, 'w') as doc:
             doc.write('\\documentclass[%s]{%s}\n' % (
