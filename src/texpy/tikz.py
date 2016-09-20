@@ -61,6 +61,7 @@ def tikzPlot(doc, datasets,
     doc.addContent('label = {%s},' % xLabel)
     doc.addContent(nl)
     doc.addContent('},')
+    doc.addContent(nl)
     doc.addContent('y axis={')
     doc.addContent(nl)
     doc.addContent('attribute = %s,' % yAttr)

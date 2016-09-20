@@ -58,7 +58,8 @@ scientific axes,%
 x axis={%
 attribute = x,%
 label = {x axis},%
-},y axis={%
+},%
+y axis={%
 attribute = y,%
 label = {y axis},%
 },%
