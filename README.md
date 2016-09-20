@@ -23,7 +23,10 @@ $ cat mytable.tex
 \end{tabular}
 \end{preview}
 \end{document}
+```
+![The produced PDF.](/doc/mytable.png)
 
+```
 $ python3
 >>> import texpy
 >>> doc = texpy.LatexDocument('myplot.tex')
@@ -76,3 +79,4 @@ x y
 \end{preview}
 \end{document}
 ```
+![The produced PDF.](/doc/myplot.png)
