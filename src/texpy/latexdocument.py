@@ -69,6 +69,12 @@ class LatexDocument:
     def endTabular(self):
         self.addContent('\\end{tabular}\n')
 
+    def beginTikzPicture(self, options=''):
+        self.addContent('\\begin{tikzpicture}[%s]\n' % options)
+
+    def endTikzPicture(self):
+        self.addContent('\\end{tikzpicture}\n')
+
     def writeDocument(self):
         with open(self.__filename, 'w') as doc:
             doc.write('\\documentclass[%s]{%s}\n' % (
