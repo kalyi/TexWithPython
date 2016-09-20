@@ -3,7 +3,7 @@
 #
 # Copyright (C) 2016 : Kathrin Hanauer
 #
-# Facilitate writing LaTeX code with Python.
+# This file is part of texpy (TexWithPython).
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -19,7 +19,7 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 #
 
-'''Write LaTeX code with Python'''
+'''Create a LaTeX table in Python'''
 
 import sys
 
