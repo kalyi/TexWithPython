@@ -82,7 +82,7 @@ def tikzPlot(doc, datasets,
     doc.addContent(']\n')
 
     for d in range(0, len(datasets)):
-        doc.addContent('data [separator=\\space,set=%s] {\n' % dnames[d])
+        doc.addContent('data [separator=\\space,set=%s] {%%\n' % dnames[d])
         doc.addContent('%s %s\n' % (xAttr, yAttr))
         for x, y in datasets[d]:
             doc.addContent('%s %s\n' % (x, y))

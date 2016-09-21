@@ -68,7 +68,7 @@ d0={style={red},label in legend={text=nonsense data}},%
 visualize as line=d1,%
 d1={style={blue},label in legend={text=random data}},%
 ]
-data [separator=\space,set=d0] {
+data [separator=\space,set=d0] {%
 x y
 1 1
 2 4
@@ -76,7 +76,7 @@ x y
 4.5 6.1
 5.5 1
 }
-data [separator=\space,set=d1] {
+data [separator=\space,set=d1] {%
 x y
 0 5
 2 -1
