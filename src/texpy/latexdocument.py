@@ -23,13 +23,15 @@
 
 
 class LatexDocument:
-    def __init__(self, fileName='texpy.tex'):
+    def __init__(self, fileName='texpy.tex', partial=False):
         self.__filename = fileName
         self.__documentclass = 'article'
-        self.__documentoptions = []
+        self.__documentOptions = []
         self.__packages = []
+        self.__packageOptions = {}
         self.__tikzlibs = []
         self.__preview = False
+        self.__partial = partial
         self.__content = []
 
     def setFileName(self, fileName):
@@ -44,15 +46,36 @@ class LatexDocument:
         self.__documentclass = docClass
 
     def addDocumentOption(self, option):
-        self.__documentoptions.append(option)
+        self.__documentOptions.append(option)
+
+    def isPartial(self):
+        return self.__partial
+
+    def setPartial(self, partial):
+        self.__partial = partial
+
+    def usesPackage(self, package):
+        return package in self.__packages
+
+    def hasPackageOption(self, package, option):
+        return (self.usesPackage(package)
+                and option in self.__packageOptions[package])
 
     def addPackage(self, package, options=[]):
-        self.__packages.append((package, options))
+        if not self.usesPackage(package):
+            self.__packages.append(package)
+            self.__packageOptions[package] = []
+        for opt in options:
+            if opt not in self.__packageOptions[package]:
+                self.__packageOptions[package].append(opt)
+
+    def usesTikzLibrary(self, tikzlib):
+        return self.usesPackage('tikz') and tikzlib in self.__tikzlibs
 
     def addTikzLibrary(self, tikzlib):
-        self.__tikzlibs.append(tikzlib)
-        if 'tikz' not in (p[0] for p in self.__packages):
-            self.addPackage('tikz')
+        if tikzlib not in self.__tikzlibs:
+            self.__tikzlibs.append(tikzlib)
+        self.addPackage('tikz')
 
     def addContent(self, content):
         self.__content.append(content)
@@ -75,22 +98,48 @@ class LatexDocument:
     def endTikzPicture(self):
         self.addContent('\\end{tikzpicture}\n')
 
+    def _writeDocumentHeader(self, doc):
+        doc.write('\\documentclass[%s]{%s}\n' % (
+            ','.join(self.__documentOptions),
+            self.__documentclass))
+        for package in self.__packages:
+            doc.write('\\usepackage[%s]{%s}\n' % (
+                ','.join(self.__packageOptions[package]), package))
+        if len(self.__tikzlibs) > 0:
+            doc.write('\\usetikzlibrary{%s}\n' %
+                      ','.join(t for t in self.__tikzlibs))
+        doc.write('\\begin{document}\n')
+        if self.__preview:
+            doc.write('\\begin{preview}\n')
+
+    def _writeRequiredPackages(self, doc):
+        if len(self.__packages) > 0:
+            doc.write('%' * 60 + '\n')
+            doc.write('% Please make sure to use the following packages:\n')
+            for package in self.__packages:
+                options = self.__packageOptions[package]
+                if len(options) > 0:
+                    doc.write('%% %s with options %s\n' % (
+                        package, ','.join(options)))
+                else:
+                    doc.write('%% %s\n' % package)
+            if len(self.__tikzlibs) > 0:
+                doc.write('%\n% and the following tikz libraries:\n')
+                doc.write('% ' + ','.join(t for t in self.__tikzlibs) + '\n')
+            doc.write('%' * 60 + '\n\n')
+
+    def _writeDocumentFooter(self, doc):
+        if self.__preview:
+            doc.write('\\end{preview}\n')
+        doc.write('\\end{document}\n')
+
     def writeDocument(self):
         with open(self.__filename, 'w') as doc:
-            doc.write('\\documentclass[%s]{%s}\n' % (
-                ','.join(self.__documentoptions),
-                self.__documentclass))
-            for package, options in self.__packages:
-                doc.write('\\usepackage[%s]{%s}\n' % (
-                    ','.join(options), package))
-            if len(self.__tikzlibs) > 0:
-                doc.write('\\usetikzlibrary{%s}\n' %
-                          ','.join(t for t in self.__tikzlibs))
-            doc.write('\\begin{document}\n')
-            if self.__preview:
-                doc.write('\\begin{preview}\n')
+            if not self.__partial:
+                self._writeDocumentHeader(doc)
+            else:
+                self._writeRequiredPackages(doc)
             for c in self.__content:
                 doc.write(c)
-            if self.__preview:
-                doc.write('\\end{preview}\n')
-            doc.write('\\end{document}\n')
+            if not self.__partial:
+                self._writeDocumentFooter(doc)
