@@ -74,7 +74,7 @@ def tikzPlot(doc, datasets,
         doc.addContent('visualize as %s=%s,' % (dvisualize[d], dnames[d]))
         doc.addContent(nl)
         if d < len(datasetLabels) and datasetLabels[d] is not None:
-            doc.addContent('%s={style={%s},label in legend={text=%s}},' % (
+            doc.addContent('%s={style={%s},label in legend={text={%s}}},' % (
                 dnames[d], dstyles[d], datasetLabels[d]))
         else:
             doc.addContent('%s={style={%s}},' % (dnames[d], dstyles[d]))
