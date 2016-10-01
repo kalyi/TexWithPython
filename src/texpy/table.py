@@ -26,28 +26,39 @@ def makeTabular(doc, tableData, rowNames=[], colNames=[],
                 colFormat='c', colSep='',
                 leftSep='', rightSep='',
                 rowNameColFormat='l',
+                useBooktabs=True,
                 nlAlways=False):
     cols = max(len(colNames), max(len(row) for row in tableData))
     rows = max(len(rowNames), len(tableData))
     withRowNames = len(rowNames) > 0
+
     amp = '\n&\n' if nlAlways else ' & '
     nl = '\n\\\\\n' if nlAlways else ' \\\\\n'
-    hline = '\\hline\n'
     rowNameFormat = rowNameColFormat + colSep
+
+    if useBooktabs:
+        toprule = '\\toprule\n'
+        midrule = '\\midrule\n'
+        bottomrule = '\\bottomrule\n'
+        doc.addPackage('booktabs')
+    else:
+        toprule = '\\hline\n'
+        midrule = '\\hline\n'
+        bottomrule = '\\hline\n'
 
     tabularFormatString = (leftSep
                            + (rowNameFormat if withRowNames else '')
                            + colSep.join(colFormat for _ in range(0, cols))
                            + rightSep)
     doc.beginTabular(tabularFormatString)
+    doc.addContent(toprule)
     if len(colNames) > 0:
-        doc.addContent(hline)
         if withRowNames:
             doc.addContent(amp)
         doc.addContent(amp.join(colNames))
         doc.addContent(amp * (cols - len(colNames) - 1))
         doc.addContent(nl)
-        doc.addContent(hline)
+        doc.addContent(midrule)
     if withRowNames:
         rowNames.extend((rows - len(rowNames)) * ' ')
     for row in range(0, len(tableData)):
@@ -58,12 +69,12 @@ def makeTabular(doc, tableData, rowNames=[], colNames=[],
         doc.addContent(nl)
     if withRowNames:
         doc.addContent(nl.join(rowNames[emptyRow] + amp
-                          + (amp * (cols - 1)) for emptyRow in
-                          range(len(tableData), rows)))
+                               + (amp * (cols - 1)) for emptyRow in
+                               range(len(tableData), rows)))
     else:
         doc.addContent(nl.join(amp * (cols - 1) for _ in
-                          range(len(tableData), rows)))
+                               range(len(tableData), rows)))
     if rows > len(tableData):
         doc.addContent(nl)
-    doc.addContent(hline)
+    doc.addContent(bottomrule)
     doc.endTabular()

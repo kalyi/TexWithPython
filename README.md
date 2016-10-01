@@ -17,12 +17,14 @@ $ python3
 $ cat mytable.tex
 \documentclass[]{article}
 \usepackage[active,tightpage]{preview}
+\usepackage[]{booktabs}
 \begin{document}
 \begin{preview}
-\begin{tabular}{|c|c|c|}
+\begin{tabular}{ccc}
+\toprule
 1 & 2 & 3 \\
 4 & 5 & 6 \\
-\hline
+\bottomrule
 \end{tabular}
 \end{preview}
 \end{document}
