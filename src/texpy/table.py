@@ -23,8 +23,8 @@
 
 
 def makeTabular(doc, tableData, rowNames=[], colNames=[],
-                colFormat='c', colSep='|',
-                leftSep='|', rightSep='|',
+                colFormat='c', colSep='',
+                leftSep='', rightSep='',
                 rowNameColFormat='l',
                 nlAlways=False):
     cols = max(len(colNames), max(len(row) for row in tableData))
