@@ -30,7 +30,9 @@ def tikzPlot(doc, datasets,
              xLabel='x axis', yLabel='y axis',
              datasetStyles=[],
              datasetLabels=[],
-             nlAlways=False):
+             nlAlways=False,
+             logXScale=False,
+             logYScale=False):
     requiredPackages = ['graphicx', 'xcolor', 'tikz']
     requiredTikzLibs = ['datavisualization', 'plotmarks']
     for p in requiredPackages:
@@ -60,6 +62,9 @@ def tikzPlot(doc, datasets,
     doc.addContent(nl)
     doc.addContent('label = {%s},' % xLabel)
     doc.addContent(nl)
+    if logXScale:
+        doc.addContent('logarithmic,')
+        doc.addContent(nl)
     doc.addContent('},')
     doc.addContent(nl)
     doc.addContent('y axis={')
@@ -68,6 +73,9 @@ def tikzPlot(doc, datasets,
     doc.addContent(nl)
     doc.addContent('label = {%s},' % yLabel)
     doc.addContent(nl)
+    if logYScale:
+        doc.addContent('logarithmic,')
+        doc.addContent(nl)
     doc.addContent('},')
     for d in range(0, len(datasets)):
         doc.addContent(nl)
