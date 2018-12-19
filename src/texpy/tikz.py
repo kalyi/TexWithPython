@@ -32,7 +32,11 @@ def tikzPlot(doc, datasets,
              datasetLabels=[],
              nlAlways=False,
              logXScale=False,
-             logYScale=False):
+             logYScale=False,
+             xAxisLength=None,
+             yAxisLength=None,
+             xLabelFormat='align=center',
+             yLabelFormat='align=center'):
     requiredPackages = ['graphicx', 'xcolor', 'tikz']
     requiredTikzLibs = ['datavisualization', 'plotmarks']
     for p in requiredPackages:
@@ -60,10 +64,13 @@ def tikzPlot(doc, datasets,
     doc.addContent(nl)
     doc.addContent('attribute = %s,' % xAttr)
     doc.addContent(nl)
-    doc.addContent('label = {%s},' % xLabel)
+    doc.addContent('label = {[node style={%s}]%s},' % (xLabelFormat, xLabel))
     doc.addContent(nl)
     if logXScale:
         doc.addContent('logarithmic,')
+        doc.addContent(nl)
+    if xAxisLength:
+        doc.addContent('length= {%s},' % xAxisLength)
         doc.addContent(nl)
     doc.addContent('},')
     doc.addContent(nl)
@@ -71,10 +78,13 @@ def tikzPlot(doc, datasets,
     doc.addContent(nl)
     doc.addContent('attribute = %s,' % yAttr)
     doc.addContent(nl)
-    doc.addContent('label = {%s},' % yLabel)
+    doc.addContent('label = {[node style={%s}]%s},' % (yLabelFormat, yLabel))
     doc.addContent(nl)
     if logYScale:
         doc.addContent('logarithmic,')
+        doc.addContent(nl)
+    if yAxisLength:
+        doc.addContent('length= {%s},' % yAxisLength)
         doc.addContent(nl)
     doc.addContent('},')
     for d in range(0, len(datasets)):
